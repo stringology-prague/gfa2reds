@@ -41,7 +41,7 @@ public class Gfa2reds {
             - Algorithm maitains a tree of paths.
             - The leaves of the tree are actually active paths in the graph.
             - The paths that are equivalent (they came to the same point in the graph) are merged.
-            - A path stores its corresponding REDS in sequence attribute. When path are merged the corresponding REDS are also merged.
+            - A path stores its corresponding REDS in sequence attribute. When path are merged the corresponding REDS are also merged..
             */
             Path p1, p2;
             activePathsSize = activePaths.size();
