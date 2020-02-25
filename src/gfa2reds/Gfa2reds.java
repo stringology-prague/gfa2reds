@@ -155,34 +155,69 @@ public class Gfa2reds {
             while(line != null) {
                 String[] tokens = line.split("\t");
                 
-                switch(tokens[0].charAt(0)) {
-                    case 'S':
-                        Node n = new Node(tokens[1],tokens[2]);
-                        nodes.put(tokens[1], n);
+                if(tokens[0].charAt(0) == 'S') {
+                    Node n = new Node(tokens[1],tokens[2]);
+                    nodes.put(tokens[1], n);
                     
-                        if(nodes.size() == 1)
-                            start = n;
-                        break;
-                    
-                    case 'L':
-                        if(nodes.containsKey(tokens[1]) && nodes.containsKey(tokens[3]) && (tokens[1].compareTo(tokens[3]) != 0))
-                        {
-                            nodes.get(tokens[1]).addChild(nodes.get(tokens[3]));
-                            nodes.get(tokens[3]).addParent(nodes.get(tokens[1]));
-                        }
+                    if(nodes.size() == 1)
+                        start = n;
                 }             
                                 
                 line = reader.readLine();
             }
             
             reader.close();
+            reader = new BufferedReader(new FileReader(filename));
+            line = reader.readLine();
+            while(line != null) {
+                String[] tokens = line.split("\t");
+                                
+                if(tokens[0].charAt(0) == 'L') {
+                    if(nodes.containsKey(tokens[1]) && nodes.containsKey(tokens[3]) && (tokens[1].compareTo(tokens[3]) != 0))
+                    {
+                        nodes.get(tokens[1]).addChild(nodes.get(tokens[3]));
+                        nodes.get(tokens[3]).addParent(nodes.get(tokens[1]));
+                    }
+                }
+                
+                line = reader.readLine();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
         return start;
     }
     
-     
+    /*TODO
+    1. Jak odstranit cykly? Které?
+    2. Jak zpracovat CIGAR strings. Pro Human Pangenome jsou nenulové...
+    
+    */
+    public static void removeCycles(HashMap<String,Node> nodes, Node start) {
+        LinkedList<Node> l1;
+        LinkedList<Node> l2 = new LinkedList<Node>();
+                
+        l2.add(start);
+        
+        while(true) {
+            l1 = l2;
+            l2 = new LinkedList<Node>();
+            
+            for(int i=0;i<l2.size();i++) {
+                Node n1 = l2.get(i);
+                n1.bfs_visited = true;
+                
+                for(int j=0;j<n1.children.size();j++) {
+                    Node n2 = n1.children.get(j);
+                    if(n2.bfs_visited) {
+                        n1.children.remove(j); 
+                        j--;
+                    }
+                }
+            }
+        }
+    }
+    
     /**
      * @param args the command line arguments
      */
