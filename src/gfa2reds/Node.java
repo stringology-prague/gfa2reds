@@ -19,9 +19,8 @@ public class Node {
     public int childrenNum;
     public int parentCounter;
     public int reachAttemptsCounter;
-    
-    public boolean bfs_visited;
-        
+    public int processed;
+            
     public Node(String id, String seq) {
         this.id = id;
         this.sequence = seq;
@@ -31,7 +30,7 @@ public class Node {
         this.childrenNum = 0;
         this.parentCounter = 0;
         this.reachAttemptsCounter = 0;
-        this.bfs_visited = false;
+        this.processed = 0;
     }
     
     public void addChild(Node n) {
